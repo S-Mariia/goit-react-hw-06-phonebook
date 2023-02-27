@@ -1,14 +1,19 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { IconContext } from 'react-icons';
 import { IoMdPerson } from 'react-icons/io';
 import { BsTelephoneFill } from 'react-icons/bs';
+
 import { Form, Label, Input, Button, Wrap } from './ContactForm.styled';
-import { addContact } from 'redux/actions';
+
+import { getContacts } from 'redux/contacts/contacts-selectors';
+
+import { addContact } from 'redux/contacts/contacts-actions';
 
 export const ContactForm = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(state => state.contacts);
+  const contacts = useSelector(getContacts);
 
   const [state, setState] = useState({
     name: '',

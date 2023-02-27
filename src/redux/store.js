@@ -1,36 +1,34 @@
-import { createStore } from 'redux';
-import { devToolsEnhancer } from '@redux-devtools/extension';
+import { configureStore } from '@reduxjs/toolkit';
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist';
+import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 
-const LS_KEY = 'contacts';
-let initContacts = null;
-const savedContacts = localStorage.getItem(LS_KEY);
-if (savedContacts !== null) {
-  initContacts = JSON.parse(savedContacts);
-}
+import rootReducer from './root-reducer';
 
-const initialState = {
-  contacts: initContacts === null ? [] : initContacts,
-  filter: '',
+const persistConfig = {
+  key: 'contacts',
+  storage,
+  whitelist: ['contacts'],
 };
 
-const rootReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case 'contacts/addContact':
-      return { ...state, contacts: [...state.contacts, action.payload] };
-    case 'contacts/deleteContact':
-      return {
-        ...state,
-        contacts: state.contacts.filter(({ id }) => id !== action.payload.id),
-      };
-    case 'filter/setFilter':
-      return {
-        ...state,
-        filter: action.payload.filter,
-      };
-    default:
-      return state;
-  }
-};
-// Створюємо розширення стора, щоб додати інструменти розробника
-const enhancer = devToolsEnhancer();
-export const store = createStore(rootReducer, enhancer);
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+export const store = configureStore({
+  reducer: persistedReducer,
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
+});
+
+export const persistor = persistStore(store);

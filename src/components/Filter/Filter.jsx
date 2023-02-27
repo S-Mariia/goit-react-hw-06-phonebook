@@ -1,10 +1,11 @@
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
-import { setFilter } from 'redux/actions';
+import { useSelector, useDispatch } from 'react-redux';
+import { setFilter } from 'redux/filter/filter-actions';
+import { getFilter } from 'redux/filter/filter-selectors';
+
 import { Paragraph, Input } from './Filter.styled';
 
 export const Filter = () => {
-  const filterValue = useSelector(state => state.filter);
+  const filterValue = useSelector(getFilter);
   const dispatch = useDispatch();
 
   return (
