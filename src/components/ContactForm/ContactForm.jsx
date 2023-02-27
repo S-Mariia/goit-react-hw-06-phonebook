@@ -9,7 +9,7 @@ import { Form, Label, Input, Button, Wrap } from './ContactForm.styled';
 
 import { getContacts } from 'redux/contacts/contacts-selectors';
 
-import { addContact } from 'redux/contacts/contacts-actions';
+import { addContact } from 'redux/contacts/contacts-slice';
 
 export const ContactForm = () => {
   const dispatch = useDispatch();
